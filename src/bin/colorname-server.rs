@@ -26,8 +26,7 @@ fn get_colors(color: String) -> Template {
             hex,
             fg: if is_dark(hex) { "lightgray" } else { "black" },
         })
-        .collect::<Vec<_>>();
-
+        .collect();
     Template::render("colorname", Colors { colors })
 }
 
@@ -36,15 +35,16 @@ fn is_dark(hex: &str) -> bool {
     let r = r as f64 / 255.0;
     let g = g as f64 / 255.0;
     let b = b as f64 / 255.0;
-    let brightness = (r * r * 0.241 + g * g * 0.691 + b * b * 0.068).sqrt();
-    brightness < 0.33
+    // perceived brightness
+    (r * r * 0.241 + g * g * 0.691 + b * b * 0.068).sqrt() < 0.33
 }
 
 fn parse_hex(hex: &str) -> (u8, u8, u8) {
-    let r = u8::from_str_radix(&hex[1..=2], 16).unwrap();
-    let g = u8::from_str_radix(&hex[3..=4], 16).unwrap();
-    let b = u8::from_str_radix(&hex[5..=6], 16).unwrap();
-    (r, g, b)
+    (
+        u8::from_str_radix(&hex[1..=2], 16).unwrap(),
+        u8::from_str_radix(&hex[3..=4], 16).unwrap(),
+        u8::from_str_radix(&hex[5..=6], 16).unwrap(),
+    )
 }
 
 fn main() {

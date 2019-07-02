@@ -46,6 +46,7 @@ fn parse_hex(hex: &str) -> (u8, u8, u8) {
     let b = u8::from_str_radix(&hex[5..=6], 16).unwrap();
     (r, g, b)
 }
+
 fn main() {
     rocket::ignite()
         .attach(Template::fairing())

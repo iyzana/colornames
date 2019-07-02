@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+  <head>
+    <style>
+      body {
+        background-color: #000000;
+      }
+      main {
+        padding-top: 50px;
+      }
+      .centering {
+        display: flex;
+        justify-content: center;
+        min-height: calc(100vh - 200px);
+      }
+      .colors {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 800px;
+        font-family: monospace;
+        font-size: x-large;
+      }
+      .heading {
+        text-align: center;
+        background-color: #000000;
+        color: lightgray;
+        margin-bottom: 40px;
+      }
+      .color {
+        text-align: center;
+        padding: 10px;
+      }
+      footer {
+        color: #7f7f7f;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      function setColor(color) {
+        const body = document.getElementsByTagName("body")[0];
+        body.style = `background-color: ${color};`;
+      }
+    </script>
+    <main>
+      <div class="centering">
+        <div class="colors">
+          <div class="heading" onclick="setColor('#000000')">
+            <h3>Colors</h3>
+          </div>
+          {% for color in colors %}
+          <div
+            class="color"
+            style="
+                  background-color: {{ color.hex }};
+                  color: {{ color.fg }};
+              "
+            onclick="setColor('{{ color.hex }}')"
+          >
+            {{ color.name }} is {{ color.hex }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <footer>
+        using the
+        <a href="https://blog.xkcd.com/2010/05/03/color-survey-results/"
+          >xkcd color dataset</a
+        >
+      </footer>
+    </main>
+  </body>
+</html>

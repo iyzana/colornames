@@ -1,6 +1,6 @@
 use clap::{App, Arg};
+use colorname::get_colors_matching;
 use crossterm_style::{Color, Colored};
-use strsim::jaro;
 
 fn main() {
     let matches = App::new("colorname")
@@ -13,7 +13,8 @@ fn main() {
         .collect::<Vec<&str>>()
         .join(" ");
 
-    let colors = get_colors_matching(&color);
+    let mut colors = get_colors_matching(&color);
+    colors.truncate(30);
     print_colors(colors);
 }
 
@@ -22,22 +23,6 @@ fn parse_hex(hex: &str) -> Color {
     let g = u8::from_str_radix(&hex[3..=4], 16).unwrap();
     let b = u8::from_str_radix(&hex[5..=6], 16).unwrap();
     Color::Rgb { r, g, b }
-}
-
-fn get_colors_matching(colorname: &str) -> Vec<(&'static str, &'static str)> {
-    let xkcd_colors: &str = include_str!("./rgb.txt");
-    let mut colors: Vec<(&str, &str)> = xkcd_colors
-        .lines()
-        .skip(1)
-        .map(|line| line.split('\t'))
-        .map(|mut line| (line.next().unwrap(), line.next().unwrap()))
-        .filter(|(name, _)| jaro(name, &colorname) > 0.75)
-        .collect();
-
-    colors.sort_by_cached_key(|(name, _)| (jaro(name, &colorname) * 1_000_000.0) as u32);
-    colors.reverse();
-    colors.truncate(30);
-    colors
 }
 
 fn print_colors(colors: Vec<(&str, &str)>) {
